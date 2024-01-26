@@ -1,7 +1,3 @@
-# Student_Name1, Student_ID1
-# Student_Name2, Student_ID2
-
-
 import cv2
 import numpy as np
 import os
@@ -89,39 +85,34 @@ def recognize_topmost_number(src_image, numbers_arr):
             return i
     return -1
 
-
+# Read data
 images, names = read_dir('data')
 numbers, _ = read_dir('numbers')
 
+# display the first image
 # cv2.imshow(names[0], images[0])
 # cv2.waitKey(0)
-
-topmost_numbers = [recognize_topmost_number(image, numbers) for image in images]
-# print(topmost_numbers)
-# print(recognize_topmost_number(images[6], numbers))
-quantized_images = quantization(images, n_colors=3)
-# cv2.imshow(names[0], quantized_images[0])
-# cv2.waitKey(0)
 # cv2.destroyAllWindows()
-# print(np.unique(quantized_images[0]))
+
+# Array of topmost number (highest bin) for each image
+topmost_numbers = [recognize_topmost_number(image, numbers) for image in images]
+
+# Quantize all images to 4 levels of gray.
+quantized_images = quantization(images, n_colors=4)
+
+# Threshold the quantized image to black & white
 threshold_value = 220
 threshold_images = [np.where(image < threshold_value, 0, 1) for image in quantized_images]
-# print(threshold_images)
 
-
-
-
-
+# Transcribe all images
 for id in range(len(images)):
+    # Array of bin heights in the image.
     bar_heights_list = [get_bar_height(threshold_images[id], bin_i) for bin_i in range(10)]
+    # Max bin height
     max_bin_height = max(bar_heights_list)
+    # Transcribe histogram in the image.
     transcribed_histogram = [round(topmost_numbers[id] * bin_height / max_bin_height) for bin_height in bar_heights_list]
     heights = ",".join(map(str, transcribed_histogram))
     print(f'Histogram {names[id]} gave {heights}')
 
-
 exit()
-
-# The following print line is what you should use when printing out the final result - the text version of each histogram, basically.
-
-# print(f'Histogram {names[id]} gave {heights}')
