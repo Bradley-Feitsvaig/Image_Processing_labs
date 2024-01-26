@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import os
-import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 
 import warnings
