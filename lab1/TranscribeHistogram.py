@@ -52,7 +52,7 @@ def get_bar_height(image, idx):
     # will work
     x_pos = 70 + 40 * idx
     y_pos = 274
-    while image[y_pos, x_pos] == 1:
+    while image[y_pos, x_pos] == 0:
         y_pos -= 1
     return 274 - y_pos
 
@@ -93,11 +93,33 @@ def recognize_topmost_number(src_image, numbers_arr):
 images, names = read_dir('data')
 numbers, _ = read_dir('numbers')
 
-cv2.imshow(names[0], images[0])
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# cv2.imshow(names[0], images[0])
+# cv2.waitKey(0)
 
-print(recognize_topmost_number(images[6], numbers))
+topmost_numbers = [recognize_topmost_number(image, numbers) for image in images]
+# print(topmost_numbers)
+# print(recognize_topmost_number(images[6], numbers))
+quantized_images = quantization(images, n_colors=3)
+# cv2.imshow(names[0], quantized_images[0])
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
+# print(np.unique(quantized_images[0]))
+threshold_value = 220
+threshold_images = [np.where(image < threshold_value, 0, 1) for image in quantized_images]
+# print(threshold_images)
+
+
+
+
+
+for id in range(len(images)):
+    bar_heights_list = [get_bar_height(threshold_images[id], bin_i) for bin_i in range(10)]
+    max_bin_height = max(bar_heights_list)
+    transcribed_histogram = [round(topmost_numbers[id] * bin_height / max_bin_height) for bin_height in bar_heights_list]
+    heights = ",".join(map(str, transcribed_histogram))
+    print(f'Histogram {names[id]} gave {heights}')
+
+
 exit()
 
 # The following print line is what you should use when printing out the final result - the text version of each histogram, basically.
