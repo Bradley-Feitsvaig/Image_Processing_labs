@@ -1,6 +1,11 @@
+# Fares Fares, 311136287
+# Bradley Feitsvaig, 311183073
+
+
 import cv2
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 
 import warnings
@@ -100,7 +105,7 @@ topmost_numbers = [recognize_topmost_number(image, numbers) for image in images]
 quantized_images = quantization(images, n_colors=4)
 
 # Threshold the quantized image to black & white
-threshold_value = 220
+threshold_value = 230
 threshold_images = [np.where(image < threshold_value, 0, 1) for image in quantized_images]
 
 # Transcribe all images
