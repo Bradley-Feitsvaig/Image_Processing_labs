@@ -5,7 +5,7 @@ import numpy as np
 def mse(im1_path, im2_path):
     image1 = cv2.imread(im1_path, cv2.IMREAD_GRAYSCALE)
     image2 = cv2.imread(im2_path, cv2.IMREAD_GRAYSCALE)
-    mse = np.mean((image1 - image2) ** 2)
+    mse = np.mean((image1 - image2) ** 2)  # calc MSE
     image_name = im2_path.split('.')[0]
     print(f"{image_name} MSE is: {mse}")
     return mse
@@ -15,21 +15,15 @@ def recreate_image_with_kernel(input_image, kernel, border_type, border_value=12
     # Calculate the border width from the kernel size
     border_width = kernel.shape[0] // 2
 
-    # Ensure the input image is a numpy array
-    input_image = np.asarray(input_image)
-
     # Apply a constant border if needed
     if border_type == cv2.BORDER_CONSTANT:
-        # The value must be a tuple, even if the image is grayscale
-        border_value_tuple = (border_value,)
-
         input_image_with_border = cv2.copyMakeBorder(input_image, border_width, border_width,
-                                                     border_width, border_width, border_type, value=border_value_tuple)
-        # Apply the kernel using filter2D
+                                                     border_width, border_width, border_type, value=(border_value,))
+        # Apply convolution
         recreated = cv2.filter2D(input_image_with_border, -1, kernel)
-        # Crop the image to remove the border, returning it to original size
+        # Returns the recreated image into original size
         recreated = recreated[border_width:-border_width, border_width:-border_width]
-    else:
+    else: # any other type of border
         # For other border types, apply the kernel using filter2D which handles borders internally
         recreated = cv2.filter2D(input_image, -1, kernel, borderType=border_type)
 
@@ -37,6 +31,7 @@ def recreate_image_with_kernel(input_image, kernel, border_type, border_value=12
 
 
 def save_image_and_calculate_mse(recreated, output_image):
+    # save the recreated image and calculate the MSE
     cv2.imwrite(f'recreated_images/{output_image}.jpg', recreated)
     mse(f'recreated_images/{output_image}.jpg', f'{output_image}.jpg')
 
@@ -133,6 +128,6 @@ save_image_and_calculate_mse(image, 'image_8')
 sharpening_kernel = np.array([[-1, -1, -1],
                               [-1, 20, -1],
                               [-1, -1, -1]]) / 12
-recreated = recreate_image_with_kernel(image, sharpening_kernel, border_type=cv2.BORDER_REFLECT101,border_value=255)
-recreated = recreate_image_with_kernel(recreated, sharpening_kernel, border_type=cv2.BORDER_REFLECT101,border_value=255)
+recreated = recreate_image_with_kernel(image, sharpening_kernel, border_type=cv2.BORDER_DEFAULT)
+recreated = recreate_image_with_kernel(recreated, sharpening_kernel, border_type=cv2.BORDER_DEFAULT)
 save_image_and_calculate_mse(recreated, 'image_9')
