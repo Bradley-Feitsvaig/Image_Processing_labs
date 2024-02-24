@@ -76,7 +76,7 @@ def recreate_image_with_motionBlur(input_image, ksize):
 
 
 def recreate_image_with_bilateralFilter(input_image):
-    recreated = cv2.bilateralFilter(input_image, d=21, sigmaColor=75, sigmaSpace=75)
+    recreated = cv2.bilateralFilter(input_image, d=15, sigmaColor=150, sigmaSpace=0)
     return recreated
 
 
@@ -120,8 +120,8 @@ save_image_and_calculate_mse(recreated, 'image_6')
 
 # # image 7
 H, W = image.shape
-kernel = np.zeros((H+1, W), dtype=np.float32)
-kernel[H, W//2] = 1
+kernel = np.zeros((H + 1, W), dtype=np.float32)
+kernel[H, W // 2] = 1
 recreated = recreate_image_with_kernel(image, kernel, border_type=cv2.BORDER_WRAP)
 save_image_and_calculate_mse(recreated, 'image_7')
 
@@ -130,23 +130,9 @@ save_image_and_calculate_mse(image, 'image_8')
 
 # image 9
 
-# Define a sharpening kernel to increase contrast
-# sharpening_kernel = np.array([[-1, -1, -1],
-#                               [-1,  9, -1],
-#                               [-1, -1, -1]])
-#
-# # recreated = recreate_image_with_kernel(image, contrast_kernel, border_type=cv2.BORDER_REFLECT)
-# recreated = recreate_image_with_kernel(image, sharpening_kernel, border_type=cv2.BORDER_REFLECT)
-# Apply Gaussian blur to the image
-kernel = np.array([[1],
-                   [0],
-                   [1]])
-b_g = recreate_image_with_kernel(image, kernel, border_type=cv2.BORDER_DEFAULT)
-
-# Subtract the blurred image from the original image to get the mask
-unsharp_mask = cv2.subtract(image, b_g)
-
-# Add the mask back to the original image to increase sharpness
-sharpened_image_with_mask = cv2.add(image, unsharp_mask)
-save_image_and_calculate_mse(sharpened_image_with_mask, 'image_9')
-
+sharpening_kernel = np.array([[-1, -1, -1],
+                              [-1, 20, -1],
+                              [-1, -1, -1]]) / 12
+recreated = recreate_image_with_kernel(image, sharpening_kernel, border_type=cv2.BORDER_REFLECT101,border_value=255)
+recreated = recreate_image_with_kernel(recreated, sharpening_kernel, border_type=cv2.BORDER_REFLECT101,border_value=255)
+save_image_and_calculate_mse(recreated, 'image_9')
