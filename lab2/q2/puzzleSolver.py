@@ -1,7 +1,3 @@
-# Fares Fares, 311136287
-# Bradley Feitsvaig, 311183073
-
-# Please replace the above comments with your names and ID numbers in the same format.
 
 import cv2
 import numpy as np

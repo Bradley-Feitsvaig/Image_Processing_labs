@@ -1,6 +1,3 @@
-# Fares Fares, 311136287
-# Bradley Feitsvaig, 311183073
-
 
 import cv2
 import numpy as np
