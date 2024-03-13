@@ -1,27 +1,27 @@
 from BadImagesFixing import *
 
 if __name__ == "__main__":
-    print("-----------------------image 1----------------------\n")
-    im1 = cv2.imread(r'Images\baby.tif')
-    im1 = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
-    im1_clean = clean_baby(im1)
-
-    plt.figure()
-    plt.subplot(1, 2, 1)
-    plt.imshow(im1, cmap='gray', vmin=0, vmax=255)
-    plt.subplot(1, 2, 2)
-    plt.imshow(im1_clean, cmap='gray', vmin=0, vmax=255)
-
-    print("-----------------------image 2----------------------\n")
-    im2 = cv2.imread(r'Images\windmill.tif')
-    im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
-    im2_clean = clean_windmill(im2)
-
-    plt.figure()
-    plt.subplot(1, 2, 1)
-    plt.imshow(im2, cmap='gray', vmin=0, vmax=255)
-    plt.subplot(1, 2, 2)
-    plt.imshow(im2_clean, cmap='gray', vmin=0, vmax=255)
+    # print("-----------------------image 1----------------------\n")
+    # im1 = cv2.imread(r'Images\baby.tif')
+    # im1 = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
+    # im1_clean = clean_baby(im1)
+    #
+    # plt.figure()
+    # plt.subplot(1, 2, 1)
+    # plt.imshow(im1, cmap='gray', vmin=0, vmax=255)
+    # plt.subplot(1, 2, 2)
+    # plt.imshow(im1_clean, cmap='gray', vmin=0, vmax=255)
+    #
+    # print("-----------------------image 2----------------------\n")
+    # im2 = cv2.imread(r'Images\windmill.tif')
+    # im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
+    # im2_clean = clean_windmill(im2)
+    #
+    # plt.figure()
+    # plt.subplot(1, 2, 1)
+    # plt.imshow(im2, cmap='gray', vmin=0, vmax=255)
+    # plt.subplot(1, 2, 2)
+    # plt.imshow(im2_clean, cmap='gray', vmin=0, vmax=255)
 
     # print("-----------------------image 3----------------------\n")
     # im3 = cv2.imread(r'Images\watermelon.tif')
@@ -33,18 +33,18 @@ if __name__ == "__main__":
     # plt.imshow(im3, cmap='gray', vmin=0, vmax=255)
     # plt.subplot(1, 2, 2)
     # plt.imshow(im3_clean, cmap='gray', vmin=0, vmax=255)
-    #
-    # print("-----------------------image 4----------------------\n")
-    # im4 = cv2.imread(r'Images\umbrella.tif')
-    # im4 = cv2.cvtColor(im4, cv2.COLOR_BGR2GRAY)
-    # im4_clean = clean_umbrella(im4)
-    #
-    # plt.figure()
-    # plt.subplot(1, 2, 1)
-    # plt.imshow(im4, cmap='gray', vmin=0, vmax=255)
-    # plt.subplot(1, 2, 2)
-    # plt.imshow(im4_clean, cmap='gray', vmin=0, vmax=255)
-    #
+
+    print("-----------------------image 4----------------------\n")
+    im4 = cv2.imread(r'Images\umbrella.tif')
+    im4 = cv2.cvtColor(im4, cv2.COLOR_BGR2GRAY)
+    im4_clean = clean_umbrella(im4)
+
+    plt.figure()
+    plt.subplot(1, 2, 1)
+    plt.imshow(im4, cmap='gray', vmin=0, vmax=255)
+    plt.subplot(1, 2, 2)
+    plt.imshow(im4_clean, cmap='gray', vmin=0, vmax=255)
+
     # print("-----------------------image 5----------------------\n")
     # im5 = cv2.imread(r'Images\USAflag.tif')
     # im5 = cv2.cvtColor(im5, cv2.COLOR_BGR2GRAY)
