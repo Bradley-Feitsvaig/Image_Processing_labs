@@ -97,13 +97,43 @@ def clean_watermelon(im):
 
 
 def clean_umbrella(im):
-    H = np.zeros((5, 80))
-    H[0, 0], H[-1, -1] = 0.5, 0.5
-    H = fft2(H, im.shape)
-    H += 1e-8
-    H = 1 / H
-    fixed_image = clean_image_in_freq_domain(im, 'umbrella', H)
-    return fixed_image
+    # Build translation filter
+
+    # Initialize a 5x80 filter to zeros (in size of the translation+1
+    filter = np.zeros((5, 80))
+    # Set the first and the last elements of the filter to 1 (for the translation)
+    filter[0, 0], filter[-1, -1] = 1, 1
+
+    # Perform a Fourier transform on the filter and extend it to the size of the image
+    mask_f = fft2(filter, im.shape)
+
+    # Compute the Fourier transform of the input image to analyze it in the frequency domain
+    im_fourier = fft2(im)
+
+    # Establish a threshold to identify significant frequencies
+    threshold = 1e-5
+
+    # Create a boolean mask where the absolute value of the filter's FFT is greater than the threshold
+    valid_mask = np.abs(mask_f) > threshold
+
+    # Apply the boolean mask to the Fourier transform of the image
+    im_fourier_masked = valid_mask * im_fourier
+
+    # Sanitize the filter by replacing insignificant frequencies with a fixed threshold
+    # This prevents division by values that are too close to zero
+    mask_f_sanitized = np.where(valid_mask, mask_f, threshold)
+
+    # Divide the masked Fourier transform of the image by the sanitized filter
+    # This is Removing the effects of the unwanted frequencies
+    clean_im_f = im_fourier_masked / mask_f_sanitized
+
+    # Perform an inverse FFT to convert the processed image back to the spatial domain
+    clean_im = np.real(ifft2(clean_im_f))
+
+    # Normalize the image to the range [0, 255], as the inverse FFT might have changed the scale
+    clean_im = cv2.normalize(clean_im, None, 0, 255, cv2.NORM_MINMAX)
+
+    return clean_im
 
 # def clean_USAflag(im):
 # 	# Your code goes here
