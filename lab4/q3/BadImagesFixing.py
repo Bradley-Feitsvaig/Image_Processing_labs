@@ -5,9 +5,7 @@ import numpy as np
 from numpy.fft import fft2, ifft2, fftshift, ifftshift
 import cv2
 import matplotlib.pyplot as plt
-from scipy import signal
 from scipy.ndimage import median_filter
-from scipy.signal import wiener
 
 
 def clean_image_in_freq_domain(im, im_name, filter):
@@ -144,14 +142,32 @@ def clean_USAflag(im):
 
 
 def clean_house(im):
-    kernel = np.ones((1, 10)) * 0.1
-    print(kernel)
-    dummy = np.fft.fft2(im)
-    kernel = np.fft.fft2(kernel, s=im.shape)
-    dummy = dummy / kernel
-    dummy = np.abs(np.fft.ifft2(dummy))
-    dummy = np.clip(dummy, 0, 255)
-    return np.uint8(dummy)
+    kernel = np.ones((1, 10), dtype=float) * 0.1
+
+    # Apply the Fourier transform to the image
+    transformed_image = np.fft.fft2(im)
+
+    # Apply the Fourier transform to the kernel and adjust its size to match the image
+    transformed_kernel = np.fft.fft2(kernel, s=im.shape)
+
+    # Perform division in the frequency domain for filtering
+    filtered_image_freq = transformed_image / transformed_kernel
+
+    # Inverse Fourier transform to convert back to the spatial domain
+    filtered_image = np.abs(np.fft.ifft2(filtered_image_freq))
+
+    # Clip filtered_image
+    filtered_image = np.clip(filtered_image, 0, 255).astype(np.uint8)
+
+    # apply low pass filter
+    cutoff_frequency = 70
+    rows, cols = filtered_image.shape
+    crow, ccol = rows // 2, cols // 2
+    mask = np.zeros((rows, cols), dtype=np.uint8)
+    mask[crow - cutoff_frequency:crow + cutoff_frequency, ccol - cutoff_frequency:ccol + cutoff_frequency] = 1
+    cleaned_image = clean_image_in_freq_domain(filtered_image, 'house-low', mask)
+
+    return cleaned_image
 
 # def clean_bears(im):
 # 	# Your code goes here
