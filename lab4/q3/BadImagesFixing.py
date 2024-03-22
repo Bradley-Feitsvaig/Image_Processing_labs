@@ -1,12 +1,11 @@
 # Student_Name1, Student_ID1
 # Student_Name2, Student_ID2
 
-# Please replace the above comments with your names and ID numbers in the same format.
-
 import numpy as np
 from numpy.fft import fft2, ifft2, fftshift, ifftshift
 import cv2
 import matplotlib.pyplot as plt
+from scipy.ndimage import median_filter
 
 
 def clean_image_in_freq_domain(im, im_name, filter):
@@ -135,11 +134,34 @@ def clean_umbrella(im):
 
     return clean_im
 
-# def clean_USAflag(im):
-# 	# Your code goes here
-#
-# def clean_house(im):
-# 	# Your code goes here
-#
+
+def clean_USAflag(im):
+    exclusion_coords = (0, 140, 0, 90)
+    original_image_array = np.copy(im)
+    filtered_image_array = median_filter(im, size=(1, 10))
+    filtered_image_array[exclusion_coords[2]:exclusion_coords[3],exclusion_coords[0]:exclusion_coords[1]] = \
+        original_image_array[exclusion_coords[2]:exclusion_coords[3],exclusion_coords[0]:exclusion_coords[1]]
+    return filtered_image_array
+
+
+def clean_house(im):
+    # Simulate a PSF with a Gaussian kernel. The size and standard deviation should be estimated.
+    # These values are placeholders and would need to be tuned to your specific image.
+    psf = cv2.getGaussianKernel(ksize=21, sigma=5)
+    psf = psf * psf.T
+
+    # Attempt blind deconvolution (conceptual, using Gaussian as PSF)
+    # Here we use the cv2.filter2D function to simulate a convolution with the PSF
+    # This is NOT an actual deconvolution and is for demonstration purposes only
+    restored_image = cv2.filter2D(im, -1, psf)
+
+    # Normalize the restored image
+    restored_image = cv2.normalize(restored_image, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
+
+    # Convert to uint8
+    restored_image = np.uint8(restored_image)
+
+    return restored_image
+
 # def clean_bears(im):
 # 	# Your code goes here

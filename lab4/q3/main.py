@@ -45,28 +45,28 @@ if __name__ == "__main__":
     plt.subplot(1, 2, 2)
     plt.imshow(im4_clean, cmap='gray', vmin=0, vmax=255)
 
-    # print("-----------------------image 5----------------------\n")
-    # im5 = cv2.imread(r'Images\USAflag.tif')
-    # im5 = cv2.cvtColor(im5, cv2.COLOR_BGR2GRAY)
-    # im5_clean = clean_USAflag(im5)
-    #
-    # plt.figure()
-    # plt.subplot(1, 2, 1)
-    # plt.imshow(im5, cmap='gray', vmin=0, vmax=255)
-    # plt.subplot(1, 2, 2)
-    # plt.imshow(im5_clean, cmap='gray', vmin=0, vmax=255)
-    #
-    # print("-----------------------image 6----------------------\n")
-    # im6 = cv2.imread(r'Images\house.tif')
-    # im6 = cv2.cvtColor(im6, cv2.COLOR_BGR2GRAY)
-    # im6_clean = clean_house(im6)
-    #
-    # plt.figure()
-    # plt.subplot(1, 2, 1)
-    # plt.imshow(im6, cmap='gray', vmin=0, vmax=255)
-    # plt.subplot(1, 2, 2)
-    # plt.imshow(im6_clean, cmap='gray', vmin=0, vmax=255)
-    #
+    print("-----------------------image 5----------------------\n")
+    im5 = cv2.imread(r'Images\USAflag.tif')
+    im5 = cv2.cvtColor(im5, cv2.COLOR_BGR2GRAY)
+    im5_clean = clean_USAflag(im5)
+
+    plt.figure()
+    plt.subplot(1, 2, 1)
+    plt.imshow(im5, cmap='gray', vmin=0, vmax=255)
+    plt.subplot(1, 2, 2)
+    plt.imshow(im5_clean, cmap='gray', vmin=0, vmax=255)
+
+    print("-----------------------image 6----------------------\n")
+    im6 = cv2.imread(r'Images\house.tif')
+    im6 = cv2.cvtColor(im6, cv2.COLOR_BGR2GRAY)
+    im6_clean = clean_house(im6)
+
+    plt.figure()
+    plt.subplot(1, 2, 1)
+    plt.imshow(im6, cmap='gray', vmin=0, vmax=255)
+    plt.subplot(1, 2, 2)
+    plt.imshow(im6_clean, cmap='gray', vmin=0, vmax=255)
+
     # print("-----------------------image 7----------------------\n")
     # im7 = cv2.imread(r'Images\bears.tif')
     # im7 = cv2.cvtColor(im7, cv2.COLOR_BGR2GRAY)
