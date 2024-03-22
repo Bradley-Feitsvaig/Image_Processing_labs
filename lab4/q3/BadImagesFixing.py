@@ -5,7 +5,9 @@ import numpy as np
 from numpy.fft import fft2, ifft2, fftshift, ifftshift
 import cv2
 import matplotlib.pyplot as plt
+from scipy import signal
 from scipy.ndimage import median_filter
+from scipy.signal import wiener
 
 
 def clean_image_in_freq_domain(im, im_name, filter):
@@ -100,8 +102,8 @@ def clean_umbrella(im):
 
     # Initialize a 5x80 filter to zeros (in size of the translation+1
     filter = np.zeros((5, 80))
-    # Set the first and the last elements of the filter to 1 (for the translation)
-    filter[0, 0], filter[-1, -1] = 1, 1
+    # Set the first and the last elements of the filter to 0.5 (for the translation of the extra shifted image)
+    filter[0, 0], filter[-1, -1] = 0.5, 0.5
 
     # Perform a Fourier transform on the filter and extend it to the size of the image
     mask_f = fft2(filter, im.shape)
@@ -129,9 +131,6 @@ def clean_umbrella(im):
     # Perform an inverse FFT to convert the processed image back to the spatial domain
     clean_im = np.real(ifft2(clean_im_f))
 
-    # Normalize the image to the range [0, 255], as the inverse FFT might have changed the scale
-    clean_im = cv2.normalize(clean_im, None, 0, 255, cv2.NORM_MINMAX)
-
     return clean_im
 
 
@@ -139,29 +138,20 @@ def clean_USAflag(im):
     exclusion_coords = (0, 140, 0, 90)
     original_image_array = np.copy(im)
     filtered_image_array = median_filter(im, size=(1, 10))
-    filtered_image_array[exclusion_coords[2]:exclusion_coords[3],exclusion_coords[0]:exclusion_coords[1]] = \
-        original_image_array[exclusion_coords[2]:exclusion_coords[3],exclusion_coords[0]:exclusion_coords[1]]
+    filtered_image_array[exclusion_coords[2]:exclusion_coords[3], exclusion_coords[0]:exclusion_coords[1]] = \
+        original_image_array[exclusion_coords[2]:exclusion_coords[3], exclusion_coords[0]:exclusion_coords[1]]
     return filtered_image_array
 
 
 def clean_house(im):
-    # Simulate a PSF with a Gaussian kernel. The size and standard deviation should be estimated.
-    # These values are placeholders and would need to be tuned to your specific image.
-    psf = cv2.getGaussianKernel(ksize=21, sigma=5)
-    psf = psf * psf.T
-
-    # Attempt blind deconvolution (conceptual, using Gaussian as PSF)
-    # Here we use the cv2.filter2D function to simulate a convolution with the PSF
-    # This is NOT an actual deconvolution and is for demonstration purposes only
-    restored_image = cv2.filter2D(im, -1, psf)
-
-    # Normalize the restored image
-    restored_image = cv2.normalize(restored_image, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
-
-    # Convert to uint8
-    restored_image = np.uint8(restored_image)
-
-    return restored_image
+    kernel = np.ones((1, 10)) * 0.1
+    print(kernel)
+    dummy = np.fft.fft2(im)
+    kernel = np.fft.fft2(kernel, s=im.shape)
+    dummy = dummy / kernel
+    dummy = np.abs(np.fft.ifft2(dummy))
+    dummy = np.clip(dummy, 0, 255)
+    return np.uint8(dummy)
 
 # def clean_bears(im):
 # 	# Your code goes here
