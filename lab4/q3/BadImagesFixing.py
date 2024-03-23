@@ -1,5 +1,5 @@
-# Student_Name1, Student_ID1
-# Student_Name2, Student_ID2
+# Fares Fares1, 311136287
+# Bradley Feitsvaig, 311183073
 
 import numpy as np
 from numpy.fft import fft2, ifft2, fftshift, ifftshift
@@ -184,6 +184,6 @@ def clean_bears(im):
             distance = np.sqrt((u - crow) ** 2 + (v - ccol) ** 2)
             if 60 < distance:
                 mask[u, v] *= 2  # Amplify these frequencies
-                
+
     cleaned_image = clean_image_in_freq_domain(im, 'bears', mask)
     return cleaned_image
