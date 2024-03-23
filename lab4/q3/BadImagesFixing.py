@@ -15,10 +15,10 @@ def clean_image_in_freq_domain(im, im_name, filter):
     # Shift the zero freq component to center
     f_shift = fftshift(f_transform)
 
-    # Visualize the image in Fourier Spectrum and save it
-    magnitude_spectrum = 20 * np.log(np.abs(f_shift) + 1)
-    magnitude_image = np.array(magnitude_spectrum)
-    cv2.imwrite(f'{im_name}_Fourier_Spectrum.png', magnitude_image)
+    # # Visualize the image in Fourier Spectrum and save it
+    # magnitude_spectrum = 20 * np.log(np.abs(f_shift) + 1)
+    # magnitude_image = np.array(magnitude_spectrum)
+    # cv2.imwrite(f'{im_name}_Fourier_Spectrum.png', magnitude_image)
 
     # Apply the local frequency filter to the shifted Fourier transform
     f_filtered = f_shift * filter
@@ -67,11 +67,14 @@ def clean_baby(im):
 
 
 def clean_windmill(im):
-    # Build frequency filter
+    # Build Local Frequency Reject filter to remove frequency noise
     rows, cols = im.shape
     frequency_filter = np.ones((rows, cols), np.uint8)
+
+    # in those indices there is the added frequency noise
     frequency_filter[132][156] = 0
     frequency_filter[124][100] = 0
+
     clean_image = clean_image_in_freq_domain(im, 'windmill', frequency_filter)
     return clean_image
 
@@ -133,15 +136,24 @@ def clean_umbrella(im):
 
 
 def clean_USAflag(im):
+    # Coordinates of stars part of the flag
     exclusion_coords = (0, 140, 0, 90)
+
+    # Save copy of the image to bring back the stars part without median filter
     original_image_array = np.copy(im)
+
+    # Apply median filter on the entire flag
     filtered_image_array = median_filter(im, size=(1, 10))
+
+    # Return back the stars part to the filtered image
     filtered_image_array[exclusion_coords[2]:exclusion_coords[3], exclusion_coords[0]:exclusion_coords[1]] = \
         original_image_array[exclusion_coords[2]:exclusion_coords[3], exclusion_coords[0]:exclusion_coords[1]]
+
     return filtered_image_array
 
 
 def clean_house(im):
+    # Build horizontal blurring (averaging) filter in size of 10
     kernel = np.ones((1, 10), dtype=float) * 0.1
 
     # Apply the Fourier transform to the image
@@ -159,7 +171,7 @@ def clean_house(im):
     # Clip filtered_image
     filtered_image = np.clip(filtered_image, 0, 255).astype(np.uint8)
 
-    # apply low pass filter
+    # apply low pass filter to remove frequency noise after the fixing
     cutoff_frequency = 70
     rows, cols = filtered_image.shape
     crow, ccol = rows // 2, cols // 2
