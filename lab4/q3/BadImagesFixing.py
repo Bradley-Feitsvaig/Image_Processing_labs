@@ -169,5 +169,21 @@ def clean_house(im):
 
     return cleaned_image
 
-# def clean_bears(im):
-# 	# Your code goes here
+
+def clean_bears(im):
+    rows, cols = im.shape
+    crow, ccol = rows // 2, cols // 2
+
+    # Initialize the mask with the scaling factor for brightening
+    scaling_factor = 2
+    mask = np.ones((rows, cols), np.float32) * scaling_factor
+
+    # Adjust the mask for contrast enhancement: amplify high frequencies
+    for u in range(rows):
+        for v in range(cols):
+            distance = np.sqrt((u - crow) ** 2 + (v - ccol) ** 2)
+            if 60 < distance:
+                mask[u, v] *= 2  # Amplify these frequencies
+                
+    cleaned_image = clean_image_in_freq_domain(im, 'bears', mask)
+    return cleaned_image

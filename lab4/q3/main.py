@@ -67,15 +67,15 @@ if __name__ == "__main__":
     plt.subplot(1, 2, 2)
     plt.imshow(im6_clean, cmap='gray', vmin=0, vmax=255)
 
-    # print("-----------------------image 7----------------------\n")
-    # im7 = cv2.imread(r'Images\bears.tif')
-    # im7 = cv2.cvtColor(im7, cv2.COLOR_BGR2GRAY)
-    # im7_clean = clean_bears(im7)
-    #
-    # plt.figure()
-    # plt.subplot(1, 2, 1)
-    # plt.imshow(im7, cmap='gray', vmin=0, vmax=255)
-    # plt.subplot(1, 2, 2)
-    # plt.imshow(im7_clean, cmap='gray', vmin=0, vmax=255)
+    print("-----------------------image 7----------------------\n")
+    im7 = cv2.imread(r'Images\bears.tif')
+    im7 = cv2.cvtColor(im7, cv2.COLOR_BGR2GRAY)
+    im7_clean = clean_bears(im7)
+
+    plt.figure()
+    plt.subplot(1, 2, 1)
+    plt.imshow(im7, cmap='gray', vmin=0, vmax=255)
+    plt.subplot(1, 2, 2)
+    plt.imshow(im7_clean, cmap='gray', vmin=0, vmax=255)
 
     plt.show()
