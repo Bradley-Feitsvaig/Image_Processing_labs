@@ -1,7 +1,3 @@
-# Fares Fares1, 311136287
-# Bradley Feitsvaig, 311183073
-
-
 import numpy as np
 from numpy.fft import fft2, ifft2, fftshift, ifftshift
 import cv2
