@@ -92,18 +92,18 @@ def clean_watermelon(im):
             H[u, v] = 1 - np.exp(-(Duv ** 2) / (2 * (D0 ** 2)))
     # Apply the High Frequency Emphasis
     alpha = 1.5  # weight for the high frequencies
-    beta = 1.0  # weight for the original frequencies
+    beta = 1.0  # weight for the low frequencies
     HFE = alpha + beta * H
     sharpened_image = clean_image_in_freq_domain(im, 'watermelon', HFE)
     return sharpened_image
 
 
 def clean_umbrella(im):
-    # Build translation filter
+    # Build filter
 
-    # Initialize a 5x80 filter to zeros (in size of the translation+1
+    # Initialize a 5x80 filter to zeros (matches the artifact's spacing)
     filter = np.zeros((5, 80))
-    # Set the first and the last elements of the filter to 0.5 (for the translation of the extra shifted image)
+    # Set the first and the last elements of the filter to 0.5 (for the delta of the original image and the shift image)
     filter[0, 0], filter[-1, -1] = 0.5, 0.5
 
     # Perform a Fourier transform on the filter and extend it to the size of the image
