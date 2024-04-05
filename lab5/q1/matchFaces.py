@@ -4,19 +4,17 @@ import matplotlib.pyplot as plt
 from numpy.fft import fft2, ifft2, fftshift, ifftshift
 from numpy.lib.stride_tricks import sliding_window_view
 import warnings
-
 warnings.filterwarnings("ignore")
 
 
-# non-maximum suppression
 def non_max_suppression(scores, threshold, dist):
     """
-  scores: 2D array of scores
-  threshold: Score threshold for considering a match
-  dist: Minimum distance between maxima
+    scores: 2D array of scores
+    threshold: Score threshold for considering a match
+    dist: Minimum distance between maxima
 
-  return: Filtered coordinates of matches
-  """
+    return: Filtered coordinates of matches
+    """
     # Apply threshold
     scores = np.where(scores >= threshold, scores, 0)
 
@@ -90,7 +88,6 @@ def scale_up(image, resize_ratio):
 
 
 def ncc_2d(image, pattern):
-    # Your code goes here
     # all possible windows of the same size as the pattern
     windows = sliding_window_view(image, pattern.shape)
 
@@ -108,8 +105,8 @@ def ncc_2d(image, pattern):
     # Calculate NCC scores
     ncc_scores = numerator / denominator
 
-    # The resulting NCC map will be smaller than the original image because the edges are not considered
-    # We need to pad the result so it's the same size as the input image
+    # The resulting NCC map will be smaller than the original image because the edges are not considered.
+    # Pad the result, so it will be in the same size as the input image.
     pad_height = (image.shape[0] - ncc_scores.shape[0]) // 2
     pad_width = (image.shape[1] - ncc_scores.shape[1]) // 2
     ncc_padded = np.pad(ncc_scores, ((pad_height, pad_height), (pad_width, pad_width)), 'constant', constant_values=0)
@@ -164,13 +161,13 @@ pattern = cv2.cvtColor(pattern, cv2.COLOR_BGR2GRAY)
 display(image, pattern)
 
 ############# Students #############
-image_scaled = image  # Your code goes here. If you choose not to scale the image, just remove it.
+image_scaled = image
 patten_scaled = scale_down(pattern, 0.5)
 
 display(image_scaled, patten_scaled)
 
-ncc = ncc_2d(image_scaled, patten_scaled)  # Your code goes here
-real_matches = non_max_suppression(ncc, 0.55, 10)  # Your code goes here
+ncc = ncc_2d(image_scaled, patten_scaled)
+real_matches = non_max_suppression(ncc, 0.55, 10)
 
 ######### DONT CHANGE THE NEXT TWO LINES #########
 real_matches[:, 0] += patten_scaled.shape[0] // 2  # if pattern was not scaled, replace this with "pattern"
